@@ -4,13 +4,12 @@ import com.favourite.blogapp.dto.PostDto;
 import com.favourite.blogapp.dto.PostResponseDto;
 import com.favourite.blogapp.entity.Post;
 import com.favourite.blogapp.exception.AlreadyExitException;
+import com.favourite.blogapp.exception.ResourceNotFound;
 import com.favourite.blogapp.repository.PostRepository;
 import com.favourite.blogapp.service.serviceImpl.PostService;
 import lombok.*;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -51,6 +50,48 @@ public class PostServiceImpl implements PostService {
             return postResponse;
         }).collect(Collectors.toList());
         return postResponseDto;
+    }
+
+    @Override
+    public PostResponseDto getPostId(Long postId) {
+        Post post = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFound("post","id", postId));
+        PostResponseDto postResponseDto = new PostResponseDto();
+        postResponseDto.setId(post.getId());
+        postResponseDto.setTitle(post.getTitle());
+        postResponseDto.setDescription(post.getDescription());
+        postResponseDto.setContent(post.getContent());
+        return postResponseDto;
+    }
+
+    @Override
+    public PostResponseDto updatePost(PostDto postDto, Long postId) {
+        Post newPost = postRepository.findById(postId).orElseThrow(()-> new ResourceNotFound("post","id", postId));
+//        checking Null values before updating a post
+        if(postDto.getTitle() != null && !postDto.getTitle() .isEmpty()){
+            newPost.setTitle(postDto.getTitle());
+        }
+        if(postDto.getDescription() != null && !postDto.getDescription().isEmpty()){
+            newPost.setDescription(postDto.getDescription());
+        }
+        if(postDto.getContent() != null && !postDto.getContent().isEmpty()){
+            newPost.setContent(postDto.getContent());
+        }
+        Post updatedPost= postRepository.save(newPost);
+
+        PostResponseDto postResponseDto = new PostResponseDto();
+        postResponseDto.setId(updatedPost.getId());
+        postResponseDto.setTitle(updatedPost.getTitle());
+        postResponseDto.setDescription(updatedPost.getDescription());
+        postResponseDto.setContent(updatedPost.getContent());
+
+        return postResponseDto;
+    }
+
+    @Override
+    public String deletePost(Long id) {
+        Post newPost = postRepository.findById(id).orElseThrow(()-> new ResourceNotFound("post","id", id));
+        postRepository.delete(newPost);
+        return "post with id: " + id + "has been successfully deleted" ;
     }
 
 
