@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "post_tb")
 @AllArgsConstructor
@@ -23,4 +26,6 @@ public class Post {
     private String description;
     @Column(nullable = false)
     private String content;
+    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
+    private Set<Comments>comments = new HashSet<>();
 }

@@ -1,6 +1,7 @@
 package com.favourite.blogapp.service.serviceImpl;
 
 import com.favourite.blogapp.dto.PostDto;
+import com.favourite.blogapp.dto.PostResCusDto;
 import com.favourite.blogapp.dto.PostResponseDto;
 import com.favourite.blogapp.entity.Post;
 
@@ -10,7 +11,7 @@ public interface PostService {
 
     PostResponseDto addPost(PostDto postDto);
 
-    List<PostResponseDto> getAllPost();
+   PostResCusDto getAllPost(int pageSize , int pageNo, String sortBy , String sortDir);
     PostResponseDto getPostId(Long postId);
 
     PostResponseDto updatePost(PostDto postDto, Long postId);
