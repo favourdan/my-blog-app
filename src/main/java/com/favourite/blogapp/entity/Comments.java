@@ -1,31 +1,29 @@
 package com.favourite.blogapp.entity;
 
-
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.HashSet;
-import java.util.Set;
-
 @Entity
-@Table(name = "post_tb")
+@Table(name = "comment_tb")
 @AllArgsConstructor
 @NoArgsConstructor
 @Setter
 @Getter
-public class Post {
+public class Comments {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
-    private String title;
     @Column(nullable = false)
-    private String description;
+    private String name;
     @Column(nullable = false)
-    private String content;
-    @OneToMany(mappedBy = "post",cascade = CascadeType.ALL,orphanRemoval = true)
-    private Set<Comments>comments = new HashSet<>();
+    private String email;
+    @Column(nullable = false)
+    private String body;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "post_id", nullable = false)
+    private Post post;
+
 }
