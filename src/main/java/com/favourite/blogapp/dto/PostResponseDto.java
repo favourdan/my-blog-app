@@ -1,9 +1,12 @@
 package com.favourite.blogapp.dto;
 
+import com.favourite.blogapp.entity.Comments;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.Set;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -14,4 +17,5 @@ public class PostResponseDto {
     private String title;
     private String description;
     private String content;
+    private Set<CommentResponseDto> comments;
 }

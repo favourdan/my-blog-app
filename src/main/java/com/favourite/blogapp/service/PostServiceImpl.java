@@ -1,5 +1,6 @@
 package com.favourite.blogapp.service;
 
+import com.favourite.blogapp.dto.CommentResponseDto;
 import com.favourite.blogapp.dto.PostDto;
 import com.favourite.blogapp.dto.PostResCusDto;
 import com.favourite.blogapp.dto.PostResponseDto;
@@ -16,6 +17,7 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,8 +58,19 @@ public class PostServiceImpl implements PostService {
             postResponseDto.setTitle(post.getTitle());
             postResponseDto.setDescription(post.getDescription());
             postResponseDto.setContent(post.getContent());
+            Set<CommentResponseDto> commentResponseDtos = post.getComments().stream().map(comment ->{
+                CommentResponseDto commentResponseDto = new CommentResponseDto();
+                commentResponseDto.setId(comment.getId());
+                commentResponseDto.setName(comment.getName());
+                commentResponseDto.setEmail(comment.getEmail());
+                commentResponseDto.setBody(comment.getBody());
+                return commentResponseDto;
+            }).collect(Collectors.toSet());
+
+            postResponseDto.setComments(commentResponseDtos);
             return postResponseDto;
         }).collect(Collectors.toList());
+
         PostResCusDto postResCusDto = new PostResCusDto();
         postResCusDto.setContent(allPost);
         postResCusDto.setPageNo(posts.getNumber());
