@@ -7,6 +7,7 @@ import com.favourite.blogapp.entity.User;
 import com.favourite.blogapp.exception.ApiException;
 import com.favourite.blogapp.repository.RoleRepository;
 import com.favourite.blogapp.repository.UserRepository;
+import com.favourite.blogapp.security.JwtTokenProvider;
 import com.favourite.blogapp.service.serviceImpl.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -27,6 +28,7 @@ public class AuthServiceImpl implements AuthService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final AuthenticationManager authenticationManager;
+    private final JwtTokenProvider tokenProvider;
 
     @Override
     public String createUser(SignUpDto signUpDto) {
@@ -60,6 +62,9 @@ public class AuthServiceImpl implements AuthService {
                 authenticate(new UsernamePasswordAuthenticationToken(
                         loginDto.getUserNameOrEmail(),loginDto.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return "User has successfully Logged-in !!";
+        String token = tokenProvider.generateToken(authentication);
+        return token;
+
+
     }
 }

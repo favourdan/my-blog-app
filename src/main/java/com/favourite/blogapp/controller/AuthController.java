@@ -1,7 +1,9 @@
 package com.favourite.blogapp.controller;
 
+import com.favourite.blogapp.dto.JwtResponseDto;
 import com.favourite.blogapp.dto.LoginDto;
 import com.favourite.blogapp.dto.SignUpDto;
+import com.favourite.blogapp.security.JwtTokenProvider;
 import com.favourite.blogapp.service.serviceImpl.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -24,9 +26,11 @@ public class AuthController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 @PostMapping(value = {"/logIn","signIn"})
-    public ResponseEntity<String> Login (@Valid @RequestBody LoginDto loginDto){
-        String response = authService.SignIn(loginDto);
-        return ResponseEntity.ok(response);
+    public ResponseEntity<JwtResponseDto> Login (@Valid @RequestBody LoginDto loginDto){
+        String token = authService.SignIn(loginDto);
+       JwtResponseDto jwtResponseDto = new JwtResponseDto();
+       jwtResponseDto.setAccessToken(token);
+        return new ResponseEntity<>(jwtResponseDto,HttpStatus.OK);
     }
 
 }
